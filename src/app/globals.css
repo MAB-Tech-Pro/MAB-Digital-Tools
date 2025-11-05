@@ -1,17 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
 @import "tailwindcss";
 
+/* Root colors */
 :root {
   --background: #ffffff;
   --foreground: #171717;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
+/* Dark mode */
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
@@ -19,8 +15,82 @@
   }
 }
 
+/* Body */
 body {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400; /* Normal text */
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
 }
+
+/* Buttons */
+.btn-primary {
+  background-color: #2563eb; /* Tailwind bg-blue-600 */
+  color: #fff;
+  padding: 0.5rem 0.75rem; /* px-3 py-2 */
+  border-radius: 0.5rem; /* rounded-lg */
+  font-size: 0.875rem; /* text-sm */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #1d4ed8; /* Tailwind hover:bg-blue-700 */
+}
+
+.btn-secondary {
+  background-color: #e5e7eb; /* Tailwind bg-gray-200 */
+  color: #000;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background-color: #d1d5db; /* Tailwind hover:bg-gray-300 */
+}
+
+/* Global user-select disable */
+*, body {
+  user-select: none;        /* Standard */
+  -webkit-user-select: none; /* Safari, Chrome */
+  -moz-user-select: none;    /* Firefox */
+  -ms-user-select: none;     /* IE/Edge Legacy */
+}
+
+/* Floating shapes animation */
+@keyframes blob {
+  0%, 100% { transform: translate(0px, 0px) scale(1); }
+  33% { transform: translate(20px, -30px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.9); }
+}
+
+.animate-blob {
+  animation: blob 8s infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+/* Blog line clamp (safe for VS Code) */
+.line-clamp-3 {
+  display: -webkit-box;           /* Required for -webkit-line-clamp */
+  -webkit-box-orient: vertical;   /* Required for -webkit-line-clamp */
+/*  -webkit-line-clamp: 3;  */        /* Limits text to 3 lines (WebKit only) */
+  overflow: hidden;               /* Hide overflowed text */
+  max-height: 4.5em;              /* Fallback: ~3 lines at 1.5em line-height */
+}
+
