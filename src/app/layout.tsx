@@ -1,6 +1,9 @@
 import './globals.css'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
+// Vercel Analytics & Speed Insights
+import { SpeedInsights } from "@vercel/speed-insights/next" {/* Speed Insights component */}
+import { Analytics } from "@vercel/analytics/react";        {/* Next depending on version */}
 
 // Metadata object
 export const metadata = {
@@ -26,7 +29,7 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'MAB Digital Tools – Lite Version',
+    title: 'MAB Digital Tools',
     description: 'Clean and responsive digital tools platform',
     images: ['/og-image.png'],
   },
@@ -48,6 +51,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Header />
         <main className="flex-1 mt-16">{children}</main>
         <Footer />
+        <Analytics />
       </body>
     </html>
   )
