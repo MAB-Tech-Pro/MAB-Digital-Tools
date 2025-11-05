@@ -155,7 +155,7 @@ export default function Home() {
               whileHover={{ scale: 1.05 }}
               className="p-6 bg-white rounded-2xl shadow-lg border border-gray-100 hover:shadow-2xl transition-all duration-300 cursor-pointer"
             >
-              <div className="text-4xl mb-3">{tool.icon}</div>
+              {/* <div className="text-4xl mb-3">{tool.icon}</div> */}
               <h3 className="font-semibold text-xl mb-2 text-gray-800">{tool.name}</h3>
               <p className="text-gray-600 text-sm font-normal">{tool.description}</p>
               <Link href={`/tools/${tool.id}`} className="mt-4 inline-block text-blue-600 hover:underline font-medium">
