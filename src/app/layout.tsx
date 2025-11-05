@@ -2,8 +2,8 @@ import './globals.css'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 // Vercel Analytics & Speed Insights
-import { SpeedInsights } from "@vercel/speed-insights/next" {/* Speed Insights component */}
-import { Analytics } from "@vercel/analytics/react";        {/* Next depending on version */}
+import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Analytics } from '@vercel/analytics/next';
 
 // Metadata object
 export const metadata = {
@@ -48,6 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className="flex flex-col min-h-screen">
+        <SpeedInsights />
         <Header />
         <main className="flex-1 mt-16">{children}</main>
         <Footer />
