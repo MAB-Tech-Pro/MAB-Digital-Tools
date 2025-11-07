@@ -1,52 +1,76 @@
-import './globals.css'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
+import "./globals.css";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 // Vercel Analytics & Speed Insights
-import { SpeedInsights } from '@vercel/speed-insights/next';
-import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next";
+import type { Metadata } from "next";
 
-// Metadata object
-export const metadata = {
-  title: 'MAB Digital Tools',
-  description: 'A MAB Digital Tools – clean, responsive, and SEO-friendly digital tools platform.',
-  metadataBase: new URL('https://yourdomain.com'), // <-- live site URL
-  keywords: ['digital tools', 'file converter', 'SEO tools', 'video downloader'],
+/**
+ * NOTE:
+ * - Aapki global CSS me user-select: none already set hai (body + *).
+ * - Is file me hum sirf SEO metadata improve kar rahe hain.
+ * - LIVE URL ko yahan update rakhein (vercel domain ya custom domain).
+ */
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  "https://mab-digital-tools.vercel.app";
+
+const SITE_NAME = "MAB Digital Tools";
+const TITLE = `${SITE_NAME} — Free, Fast & Privacy-Friendly Utilities`;
+const DESCRIPTION =
+  "Convert PDFs, download videos (allowed sources), and more. No sign-up. Lightweight, responsive, and privacy-first tools by MAB Tech.";
+
+export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: TITLE,
+    template: `%s • ${SITE_NAME}`,
+  },
+  description: DESCRIPTION,
+  applicationName: SITE_NAME,
+  keywords: [
+    "MAB Digital Tools",
+    "Online Tools",
+    "PDF to Image",
+    "Video Downloader",
+    "Free Tools",
+    "SEO Tools",
+    "Image Tools",
+  ],
+  authors: [{ name: "MAB Tech" }],
+  creator: "MAB Tech",
+  publisher: "MAB Tech",
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
-    title: 'MAB Digital Tools',
-    description: 'Clean and responsive digital tools platform',
-    url: 'https://yourdomain.com',
-    siteName: 'MAB Digital Tools',
-    images: [
-      {
-        url: '/og-image.png',
-        width: 1200,
-        height: 630,
-        alt: 'MAB Digital Tools',
-      },
-    ],
-    locale: 'en_US',
-    type: 'website',
+    type: "website",
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    title: TITLE,
+    description: DESCRIPTION,
+    // Agar aapke paas OG image ready ho, /og-image.png place karke uncomment karein:
+    // images: [{ url: "/og-image.png", width: 1200, height: 630, alt: SITE_NAME }],
   },
   twitter: {
-    card: 'summary_large_image',
-    title: 'MAB Digital Tools',
-    description: 'Clean and responsive digital tools platform',
-    images: ['/og-image.png'],
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
+    // images: ["/og-image.png"], // optional
   },
-  icons: {
-    icon: '/favicon.ico',
+  robots: {
+    index: true,
+    follow: true,
   },
-}
-
-// New viewport export
-export const viewport = {
-  width: 'device-width',
-  initialScale: 1,
-}
+  // Optional: theme color for PWA/Android address bar
+  themeColor: "#0ea5e9",
+};
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      {/* Performance & SEO friendly defaults */}
       <body className="flex flex-col min-h-screen">
         <SpeedInsights />
         <Header />
@@ -55,5 +79,5 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Analytics />
       </body>
     </html>
-  )
+  );
 }

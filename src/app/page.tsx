@@ -1,18 +1,15 @@
 "use client";
 
-import CountUp from "react-countup"
-import Link from "next/link"
+import CountUp from "react-countup";
+import Link from "next/link";
 import { motion } from "framer-motion";
-import toolsData from "../data/tools.json"
-import blogData from "../data/blog.json"
-import ToolCard from "../components/ToolCard"
-import BlogCard from "../components/BlogCard"
+import toolsData from "../data/tools.json";
+import blogData from "../data/blog.json";
 
 export default function Home() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-
-      {/* Hero Section with Floating Shapes */}
+      {/* ================= HERO ================= */}
       <section className="relative py-20 text-center select-none overflow-hidden">
         {/* Floating Blobs */}
         <motion.div
@@ -50,30 +47,33 @@ export default function Home() {
           Boost your productivity with fast & smart tools for text, SEO, images, and more.
         </motion.p>
 
-        {/* Buttons */}
+        {/* Buttons (Next.js Link) */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1, duration: 0.8 }}
           className="relative z-10 mt-8 flex justify-center gap-4 flex-wrap"
         >
-          <motion.a
-            whileHover={{ scale: 1.05 }}
-            href="/tools"
-            className="px-6 py-3 bg-blue-600 text-white rounded-lg text-lg hover:bg-blue-700 transition font-medium"
-          >
-            Browse Tools
-          </motion.a>
-          <motion.a
-            whileHover={{ scale: 1.05 }}
-            href="/contact-us"
-            className="px-6 py-3 border border-gray-400 text-gray-700 rounded-lg text-lg hover:bg-gray-100 transition font-medium"
-          >
-            Contact Us
-          </motion.a>
+          <motion.div whileHover={{ scale: 1.05 }}>
+            <Link
+              href="/tools"
+              className="px-6 py-3 bg-blue-600 text-white rounded-lg text-lg hover:bg-blue-700 transition font-medium inline-block"
+            >
+              Browse Tools
+            </Link>
+          </motion.div>
+
+          <motion.div whileHover={{ scale: 1.05 }}>
+            <Link
+              href="/contact-us"
+              className="px-6 py-3 border border-gray-400 text-gray-700 rounded-lg text-lg hover:bg-gray-100 transition font-medium inline-block"
+            >
+              Contact Us
+            </Link>
+          </motion.div>
         </motion.div>
 
-        {/* Search Input */}
+        {/* Search Input (static for now) */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -83,12 +83,13 @@ export default function Home() {
           <input
             type="text"
             placeholder="Search tools..."
+            aria-label="Search tools"
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </motion.div>
       </section>
 
-      {/* Feature Cards */}
+      {/* ================= FEATURE CARDS (Benefits) ================= */}
       <section className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 select-none">
         <div className="p-6 bg-white shadow-md rounded-2xl border hover:shadow-lg transition">
           <div className="text-3xl mb-2">⚡</div>
@@ -115,8 +116,70 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Counter Section */}
-      <section className="mt-20 text-center select-none">
+      {/* ================= FEATURED TOOLS (Icons removed) ================= */}
+      <section className="mt-16 select-none">
+        <h2 className="text-3xl font-bold mb-8 text-gray-900 border-b-2 border-blue-500 w-fit pb-1">
+          Featured Tools
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {toolsData.slice(0, 3).map((tool, index) => (
+            <motion.div
+              key={tool.id}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.2, duration: 0.6 }}
+              whileHover={{ scale: 1.05 }}
+              className="p-6 bg-white rounded-2xl shadow-lg border border-gray-100 hover:shadow-2xl transition-all duration-300 cursor-pointer"
+            >
+              {/* Icon removed as requested */}
+              <h3 className="font-semibold text-xl mb-2 text-gray-800">{tool.name}</h3>
+              <p className="text-gray-600 text-sm font-normal">{tool.description}</p>
+              <Link
+                href={`/tools/${tool.id}`}
+                className="mt-4 inline-block text-blue-600 hover:underline font-medium"
+              >
+                Use Tool →
+              </Link>
+            </motion.div>
+          ))}
+        </div>
+        <div className="mt-6 text-right">
+          <Link href="/tools" className="text-green-600 hover:underline font-medium">
+            View All Tools
+          </Link>
+        </div>
+      </section>
+
+      {/* ================= HOW IT WORKS ================= */}
+      <section className="mt-16 select-none">
+        <h2 className="text-3xl font-bold mb-8 text-gray-900 border-b-2 border-purple-500 w-fit pb-1">
+          How It Works
+        </h2>
+        <div className="grid gap-6 md:grid-cols-3">
+          {[
+            { step: "1", title: "Select a Tool", desc: "Pick from converters, downloaders, and more." },
+            { step: "2", title: "Add Input", desc: "Upload a file or paste a link — super simple." },
+            { step: "3", title: "Get Result", desc: "Download instantly or copy to clipboard." },
+          ].map((s, i) => (
+            <motion.div
+              key={s.step}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.15, duration: 0.5 }}
+              className="rounded-2xl border bg-white p-6 shadow-sm"
+            >
+              <div className="text-4xl font-bold text-purple-600">{s.step}</div>
+              <h3 className="mt-3 text-lg font-semibold">{s.title}</h3>
+              <p className="mt-1 text-sm text-gray-600">{s.desc}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* ================= COUNTERS (Social Proof) ================= */}
+      <section className="mt-16 text-center select-none">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-3xl mx-auto">
           <div>
             <h3 className="text-4xl font-bold text-blue-600">
@@ -139,40 +202,90 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Tools Section */}
-      <section className="mb-16 select-none">
-        <h2 className="text-3xl font-bold mb-8 text-gray-900 border-b-2 border-blue-500 w-fit pb-1">
-          Featured Tools
+      {/* ================= TESTIMONIALS ================= */}
+      <section className="mt-16 select-none">
+        <h2 className="text-3xl font-bold mb-8 text-gray-900 border-b-2 border-amber-500 w-fit pb-1">
+          What Users Say
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {toolsData.slice(0, 3).map((tool, index) => (
-            <motion.div
-              key={tool.id}
-              initial={{ opacity: 0, y: 40 }}
+        <div className="grid gap-6 md:grid-cols-3">
+          {[
+            { name: "Ahsan", text: "Super fast and clean UI. Love the PDF converter!", rating: 5 },
+            { name: "Sara", text: "No signup, no nonsense. Exactly what I needed.", rating: 5 },
+            { name: "Bilal", text: "Video downloader works smoothly for allowed sources.", rating: 4 },
+          ].map((t, i) => (
+            <motion.figure
+              key={i}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.2, duration: 0.6 }}
-              whileHover={{ scale: 1.05 }}
-              className="p-6 bg-white rounded-2xl shadow-lg border border-gray-100 hover:shadow-2xl transition-all duration-300 cursor-pointer"
+              transition={{ delay: i * 0.15, duration: 0.5 }}
+              className="rounded-2xl border bg-white p-6 shadow-sm"
             >
-              <div className="text-4xl mb-3">{tool.icon}</div>
-              <h3 className="font-semibold text-xl mb-2 text-gray-800">{tool.name}</h3>
-              <p className="text-gray-600 text-sm font-normal">{tool.description}</p>
-              <Link href={`/tools/${tool.id}`} className="mt-4 inline-block text-blue-600 hover:underline font-medium">
-                Use Tool →
-              </Link>
-            </motion.div>
+              <div className="text-yellow-500 mb-2">
+                {"⭐".repeat(t.rating)}{t.rating < 5 ? "☆" : ""}
+              </div>
+              <blockquote className="text-gray-700">{t.text}</blockquote>
+              <figcaption className="mt-3 text-sm text-gray-500">— {t.name}</figcaption>
+            </motion.figure>
           ))}
-        </div>
-        <div className="mt-6 text-right">
-          <Link href="/tools" className="text-green-600 hover:underline font-medium">
-            View All Tools
-          </Link>
         </div>
       </section>
 
-      {/* Recent Blog Posts Section */}
-      <section className="mb-16 select-none">
+      {/* ================= ABOUT / WHY CHOOSE US ================= */}
+      <section className="mt-16 select-none">
+        <div className="rounded-2xl border bg-white p-8 md:p-10 shadow-sm">
+          <h2 className="text-3xl font-bold mb-4 text-gray-900">Why Choose MAB Digital Tools?</h2>
+          <p className="text-gray-700 max-w-3xl">
+            We build small, fast and privacy-first utilities so you can get results in seconds — without sign-ups,
+            popups, or clutter. Everything is optimized for simple workflows and clean downloads.
+          </p>
+          <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+            <li className="flex items-start gap-3">
+              <span className="text-xl">✅</span><span>Privacy-respecting: process and go, no accounts.</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <span className="text-xl">✅</span><span>Lightweight UI: minimal clicks, clear results.</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <span className="text-xl">✅</span><span>Free forever: no hidden costs.</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <span className="text-xl">✅</span><span>Regular new tools & improvements.</span>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      {/* ================= FAQ ================= */}
+      <section className="mt-16 select-none">
+        <h2 className="text-3xl font-bold mb-8 text-gray-900 border-b-2 border-teal-500 w-fit pb-1">
+          Frequently Asked Questions
+        </h2>
+        <div className="grid gap-4">
+          {[
+            {
+              q: "Is it free to use?",
+              a: "Yes — all tools are free. If anything changes, we’ll announce clearly.",
+            },
+            {
+              q: "Do I need to create an account?",
+              a: "No account needed. Use and download instantly.",
+            },
+            {
+              q: "Is my data stored?",
+              a: "We aim to process inputs transiently. Avoid uploading sensitive data.",
+            },
+          ].map((f, i) => (
+            <details key={i} className="rounded-xl border bg-white p-4 open:shadow-sm">
+              <summary className="cursor-pointer select-none font-medium">{f.q}</summary>
+              <p className="mt-2 text-sm text-gray-600">{f.a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      {/* ================= RECENT BLOG POSTS (Images removed) ================= */}
+      <section className="mt-16 mb-16 select-none">
         <h2 className="text-3xl font-bold mb-8 text-gray-900 border-b-2 border-green-500 w-fit pb-1">
           Recent Blog Posts
         </h2>
@@ -187,16 +300,12 @@ export default function Home() {
               whileHover={{ scale: 1.03 }}
               className="bg-white rounded-2xl shadow-lg border border-gray-100 hover:shadow-2xl transition-all duration-300 overflow-hidden cursor-pointer"
             >
-              {blog.image && (
-                <img
-                  src={blog.image}
-                  alt={blog.title}
-                  className="w-full h-48 object-cover rounded-t-2xl"
-                />
-              )}
+              {/* Image removed as requested */}
               <div className="p-6">
                 <h3 className="font-semibold text-lg mb-2 text-gray-800">{blog.title}</h3>
-                <p className="text-gray-600 text-sm mb-4 line-clamp-3 font-normal">{blog.description}</p>
+                <p className="text-gray-600 text-sm mb-4 line-clamp-3 font-normal">
+                  {blog.description}
+                </p>
                 <Link href={`/blog/${blog.id}`} className="text-green-600 hover:underline font-medium">
                   Read More →
                 </Link>
@@ -210,7 +319,6 @@ export default function Home() {
           </Link>
         </div>
       </section>
-
     </div>
-  )
+  );
 }
