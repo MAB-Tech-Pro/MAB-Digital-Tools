@@ -3,21 +3,33 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import toolsData from "../../../data/tools.json";
 
-// Types (lightweight to match your demo JSON)
+// Types aligned with your JSON (id can be number)
 type Tool = {
-  id: string;
+  id: string | number;
+  slug?: string;
   name: string;
   description?: string;
   category?: string;
   features?: string[];
   steps?: string[];
+  // icon?: string; // present in JSON but we are not using icons
 };
+
+// Helper: find tool by slug OR id
+function findToolByParam(param: string): Tool | undefined {
+  const list = toolsData as unknown as Tool[];
+  return list.find(
+    (t) =>
+      (t.slug && String(t.slug) === param) ||
+      String(t.id) === param
+  );
+}
 
 // ------- SEO: per-tool dynamic metadata -------
 export async function generateMetadata(
   { params }: { params: { id: string } }
 ): Promise<Metadata> {
-  const tool = (toolsData as Tool[]).find((t) => String(t.id) === String(params.id));
+  const tool = findToolByParam(params.id);
   const title = tool ? `${tool.name} • MAB Digital Tools` : "Tool • MAB Digital Tools";
   const description =
     tool?.description ||
@@ -26,9 +38,7 @@ export async function generateMetadata(
   return {
     title,
     description,
-    alternates: {
-      canonical: `/tools/${params.id}`,
-    },
+    alternates: { canonical: `/tools/${params.id}` },
     openGraph: {
       title,
       description,
@@ -46,7 +56,7 @@ export async function generateMetadata(
 
 // ------- Page -------
 export default function ToolDetailPage({ params }: { params: { id: string } }) {
-  const tool = (toolsData as Tool[]).find((t) => String(t.id) === String(params.id));
+  const tool = findToolByParam(params.id);
 
   if (!tool) {
     return (
@@ -62,22 +72,23 @@ export default function ToolDetailPage({ params }: { params: { id: string } }) {
     );
   }
 
-  // Fallbacks for optional demo fields
-  const features = tool.features && tool.features.length > 0
-    ? tool.features
-    : [
-        "Fast processing with a clean UI",
-        "Privacy-friendly — no account required",
-        "Works on all modern devices",
-      ];
+  const features =
+    tool.features && tool.features.length > 0
+      ? tool.features
+      : [
+          "Fast processing with a clean UI",
+          "Privacy-friendly — no account required",
+          "Works on all modern devices",
+        ];
 
-  const steps = tool.steps && tool.steps.length > 0
-    ? tool.steps
-    : [
-        "Open the tool from this page.",
-        "Add your input (upload/paste).",
-        "Click Process and download your result.",
-      ];
+  const steps =
+    tool.steps && tool.steps.length > 0
+      ? tool.steps
+      : [
+          "Open the tool from this page.",
+          "Add your input (upload/paste).",
+          "Click Process and download your result.",
+        ];
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 select-none">
@@ -105,9 +116,8 @@ export default function ToolDetailPage({ params }: { params: { id: string } }) {
 
       {/* Actions */}
       <div className="flex flex-wrap gap-3 mb-10">
-        {/* Primary CTA — same page, future UI can mount below */}
         <Link
-          href={`/tools/${tool.id}`}
+          href={`/tools/${params.id}`}
           className="px-5 py-3 bg-blue-600 text-white rounded-lg text-sm md:text-base hover:bg-blue-700 transition font-medium inline-block"
         >
           Start Using {tool.name}
@@ -164,7 +174,7 @@ export default function ToolDetailPage({ params }: { params: { id: string } }) {
 
             <div className="mt-5 rounded-xl bg-gray-50 border p-4">
               <p className="text-xs text-gray-500">
-                Note: Hamaray tools privacy-first approach follow karte hain. Sensitve data upload na karein.
+                Note: Hamaray tools privacy-first approach follow karte hain. Sensitive data upload na karein.
               </p>
             </div>
           </div>
