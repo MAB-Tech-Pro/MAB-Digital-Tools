@@ -1,11 +1,22 @@
 "use client";
 
 import * as React from "react";
+import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import BlogCard from "@/components/BlogCard";
 import { blogs } from "@/data/blog";
 
+// ✅ Export a tiny wrapper page that provides Suspense
 export default function BlogPage() {
+  return (
+    <Suspense fallback={<div className="p-6 text-sm text-muted-foreground">Loading…</div>}>
+      <BlogPageInner />
+    </Suspense>
+  );
+}
+
+// 👇 Your existing logic moved here
+function BlogPageInner() {
   const router = useRouter();
   const sp = useSearchParams();
   const initialQ = sp.get("q") ?? "";
@@ -37,7 +48,7 @@ export default function BlogPage() {
   }, [q]);
 
   const onSubmit = (e?: React.FormEvent<HTMLFormElement>) => {
-    e?.preventDefault(); // ⬅️ focus jump stop
+    e?.preventDefault();
     listRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
@@ -62,7 +73,7 @@ export default function BlogPage() {
               onKeyDown={(e) => {
                 if (e.key === "Escape") setQ("");
                 if (e.key === "Enter") {
-                  e.preventDefault(); // 🔒
+                  e.preventDefault();
                   onSubmit();
                 }
               }}

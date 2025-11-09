@@ -1,17 +1,25 @@
 "use client";
 
 import * as React from "react";
+import { Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { tools } from "@/data/tools";
 
 export default function ToolsPage() {
+  return (
+    <Suspense fallback={<div className="p-6 text-sm text-muted-foreground">Loading…</div>}>
+      <ToolsPageInner />
+    </Suspense>
+  );
+}
+
+function ToolsPageInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const initialQ = searchParams.get("q") ?? "";
   const [q, setQ] = React.useState<string>(initialQ);
 
-  // scroll target
   const listRef = React.useRef<HTMLDivElement | null>(null);
 
   React.useEffect(() => {
@@ -38,7 +46,7 @@ export default function ToolsPage() {
   }, [q]);
 
   const onSubmit = (e?: React.FormEvent<HTMLFormElement>) => {
-    e?.preventDefault(); // ⬅️ stop focus jumping to newsletter
+    e?.preventDefault();
     listRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
@@ -63,7 +71,7 @@ export default function ToolsPage() {
               onKeyDown={(e) => {
                 if (e.key === "Escape") setQ("");
                 if (e.key === "Enter") {
-                  e.preventDefault(); // 🔒
+                  e.preventDefault();
                   onSubmit();
                 }
               }}
