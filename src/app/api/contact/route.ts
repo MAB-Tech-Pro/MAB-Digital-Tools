@@ -65,7 +65,7 @@ export async function POST(req: Request) {
     const { error } = await resend.emails.send({
       from: FROM,
       to: [TO],
-      reply_to: email, // allows you to reply directly
+      replyTo: email, // allows you to reply directly
       subject,
       html,
     });
