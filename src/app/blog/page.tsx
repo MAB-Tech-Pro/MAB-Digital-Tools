@@ -1,59 +1,101 @@
 "use client";
 
-import Link from "next/link";
-import { motion } from "framer-motion";
-import blogData from "../../data/blog.json";
+import * as React from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import BlogCard from "@/components/BlogCard";
+import { blogs } from "@/data/blog";
 
 export default function BlogPage() {
-  const posts = blogData || [];
+  const router = useRouter();
+  const sp = useSearchParams();
+  const initialQ = sp.get("q") ?? "";
+  const [q, setQ] = React.useState(initialQ);
+
+  const listRef = React.useRef<HTMLDivElement | null>(null);
+
+  React.useEffect(() => {
+    const id = setTimeout(() => {
+      const next = new URLSearchParams(Array.from(sp.entries()));
+      if (q) next.set("q", q);
+      else next.delete("q");
+      router.replace(`/blog${next.size ? `?${next.toString()}` : ""}`);
+    }, 250);
+    return () => clearTimeout(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [q]);
+
+  const norm = (s: string) =>
+    s.toLowerCase().normalize("NFKD").replace(/\s+/g, " ").trim();
+
+  const filtered = React.useMemo(() => {
+    if (!q) return blogs;
+    const n = norm(q);
+    return blogs.filter((b) => {
+      const hay = `${b.title ?? ""} ${b.excerpt ?? ""} ${b.content ?? ""}`.toLowerCase();
+      return hay.includes(n);
+    });
+  }, [q]);
+
+  const onSubmit = (e?: React.FormEvent<HTMLFormElement>) => {
+    e?.preventDefault(); // ⬅️ focus jump stop
+    listRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 select-none">
-      {/* Header */}
-      <header className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Blog</h1>
-        <p className="mt-2 text-gray-600">
-          Updates, tips aur product changelogs — simple, short aur useful.
-        </p>
+    <main className="mx-auto w-full max-w-6xl p-6">
+      <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">Blog</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {filtered.length} result{filtered.length !== 1 ? "s" : ""} found
+          </p>
+        </div>
+
+        <div className="w-full sm:w-96">
+          <form onSubmit={onSubmit} className="relative">
+            <label htmlFor="blog-search" className="sr-only">Search blog</label>
+            <input
+              id="blog-search"
+              type="text"
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Escape") setQ("");
+                if (e.key === "Enter") {
+                  e.preventDefault(); // 🔒
+                  onSubmit();
+                }
+              }}
+              placeholder="Search by title or content…"
+              className="w-full rounded-xl border bg-background px-3 py-2 text-sm outline-none focus:border-ring"
+              autoComplete="off"
+              enterKeyHint="search"
+            />
+            {q ? (
+              <button
+                type="button"
+                onClick={() => setQ("")}
+                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md px-2 py-1 text-xs text-muted-foreground hover:bg-accent"
+                aria-label="Clear search"
+              >
+                Clear
+              </button>
+            ) : null}
+          </form>
+        </div>
       </header>
 
-      {/* Empty state */}
-      {posts.length === 0 ? (
-        <div className="rounded-2xl border bg-white p-10 text-center text-gray-600">
-          Abhi koi post available nahi. Jaldi hi updates aayengi.
+      {filtered.length === 0 ? (
+        <div className="mt-8 rounded-2xl border p-6 text-sm text-muted-foreground">
+          No matching posts. Try a different keyword.
         </div>
       ) : (
-        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-          {posts.map((post: any, idx: number) => (
-            <motion.article
-              key={post.id}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: (idx % 6) * 0.05, duration: 0.4 }}
-              className="rounded-2xl border bg-white p-6 shadow-sm hover:shadow-md transition"
-            >
-              {/* NOTE: No image by requirement */}
-              <h2 className="text-lg font-semibold text-gray-900">{post.title}</h2>
-
-              {post.date ? (
-                <time className="mt-1 block text-xs text-gray-500">{post.date}</time>
-              ) : null}
-
-              <p className="mt-2 text-sm text-gray-600 line-clamp-3">{post.description}</p>
-
-              <div className="mt-4">
-                <Link
-                  href={`/blog/${post.id}`}
-                  className="inline-block text-blue-600 hover:underline font-medium"
-                >
-                  Read More →
-                </Link>
-              </div>
-            </motion.article>
+        <section ref={listRef} className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {filtered.map((b) => (
+            <BlogCard key={b.slug} blog={b} />
           ))}
-        </div>
+        </section>
       )}
-    </div>
+    </main>
   );
 }

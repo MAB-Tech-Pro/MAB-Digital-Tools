@@ -1,4 +1,0 @@
-[
-  { "id": 1, "slug": "pdf-to-image", "name": "PDF to Image", "category": "File Converter", "description": "Convert PDF pages into images.", "icon": "📄" },
-  { "id": 2, "slug": "video-downloader", "name": "Video Downloader", "category": "Video Tool", "description": "Download videos from various platforms.", "icon": "🎥" }
-]

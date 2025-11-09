@@ -14,7 +14,7 @@ import type { Metadata } from "next";
  */
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ||
-  "https://mab-digital-tools.vercel.app";
+  "https://tools.themabtech.com";
 
 const SITE_NAME = "MAB Digital Tools";
 const TITLE = `${SITE_NAME} — Free, Fast & Privacy-Friendly Utilities`;
@@ -63,8 +63,6 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
-  // Optional: theme color for PWA/Android address bar
-  themeColor: "#0ea5e9",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -1,53 +1,76 @@
+import type { Metadata } from "next";
 import Link from "next/link";
-import blogData from "../../../data/blog.json";
+import { notFound } from "next/navigation";
+import { blogs } from "@/data/blog";
 
-type Params = { params: { id: string } };
+type Params = { id: string };
 
-export default function BlogPostPage({ params }: Params) {
-  const post = (blogData as any[]).find((p) => String(p.id) === String(params.id));
+export function generateStaticParams() {
+  return blogs.map((b) => ({ id: b.slug }));
+}
 
+export function generateMetadata({ params }: { params: Params }): Metadata {
+  const post = blogs.find((b) => b.slug === params.id);
   if (!post) {
-    return (
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10 select-none">
-        <div className="rounded-2xl border bg-white p-8 text-center">
-          <h1 className="text-2xl font-semibold text-gray-900">Post not found</h1>
-          <p className="mt-2 text-gray-600">Requested blog post does not exist.</p>
-          <div className="mt-4">
-            <Link href="/blog" className="text-blue-600 hover:underline font-medium">
-              ← Back to Blog
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
+    return { title: "Post Not Found • MAB Digital Tools", robots: { index: false } };
   }
+  const title = `${post.title} • MAB Digital Tools`;
+  const description = post.excerpt ?? "Read this post on MAB Digital Tools.";
+  const path = `/blog/${post.slug}`;
+  return {
+    title,
+    description,
+    alternates: { canonical: path },
+    openGraph: { title, description, url: path, type: "article" },
+    twitter: { card: "summary", title, description },
+  };
+}
+
+export default function BlogDetailPage({ params }: { params: Params }) {
+  const post = blogs.find((b) => b.slug === params.id);
+  if (!post) notFound();
 
   return (
-    <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10 select-none">
-      <header className="mb-6">
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-900">{post.title}</h1>
-        {post.date ? (
-          <time className="mt-2 block text-sm text-gray-500">{post.date}</time>
+    <main className="mx-auto w-full max-w-3xl p-6">
+      <nav className="mb-4">
+        <Link href="/blog" className="text-sm text-muted-foreground hover:underline">
+          ← Back to blog
+        </Link>
+      </nav>
+
+      <header>
+        <h1 className="text-2xl font-semibold tracking-tight">{post.title}</h1>
+        <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+          <span>{post.author ?? "MAB Tech"}</span>
+          {post.date ? <span>• {new Date(post.date).toLocaleDateString()}</span> : null}
+          {/* category removed */}
+          {post.tags?.length ? (
+            <span className="inline-flex items-center gap-1">
+              • {post.tags.map((t) => `#${t}`).join(" ")}
+            </span>
+          ) : null}
+        </div>
+        {post.excerpt ? (
+          <p className="mt-3 text-sm text-muted-foreground">{post.excerpt}</p>
+        ) : null}
+        {post.cover ? (
+          <img
+            src={post.cover}
+            alt={post.title}
+            className="mt-4 aspect-video w-full rounded-2xl object-cover border"
+          />
         ) : null}
       </header>
 
-      {/* NOTE: by requirement, no featured image */}
+      <div className="my-6 h-px w-full bg-border" />
 
-      {/* Content */}
-      <div className="prose prose-sm sm:prose-base max-w-none text-gray-800 select-none">
-        {/* If your JSON has 'content' as HTML/markdown, adapt this.
-            For demo JSON (description only), we show description paragraphs. */}
-        {post.description ? <p>{post.description}</p> : null}
+      <article className="prose prose-sm max-w-none dark:prose-invert">
         {post.content ? (
-          <div className="mt-4 whitespace-pre-wrap">{post.content}</div>
-        ) : null}
-      </div>
-
-      <footer className="mt-10">
-        <Link href="/blog" className="text-blue-600 hover:underline font-medium">
-          ← Back to Blog
-        </Link>
-      </footer>
-    </article>
+          <div dangerouslySetInnerHTML={{ __html: post.content }} />
+        ) : (
+          <p className="text-sm text-muted-foreground">Content coming soon. Stay tuned!</p>
+        )}
+      </article>
+    </main>
   );
 }

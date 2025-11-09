@@ -1,7 +1,7 @@
 // src/app/sitemap.ts
 import type { MetadataRoute } from "next";
-import tools from "../data/tools.json";
-import blog from "../data/blog.json";
+import { tools, type Tool } from "@/data/tools";
+import { blogs, type Blog } from "@/data/blog";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://tools.themabtech.com";
@@ -32,7 +32,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   // Blog dynamic routes
-  const blogRoutes: MetadataRoute.Sitemap = (blog as any[]).map((b) => ({
+  const blogRoutes: MetadataRoute.Sitemap = (blogs as any[]).map((b) => ({
     url: `${SITE_URL}/blog/${b.id}`,
     lastModified: now,
     changeFrequency: "monthly",
