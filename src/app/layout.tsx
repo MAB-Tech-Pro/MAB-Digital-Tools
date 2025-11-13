@@ -4,22 +4,15 @@ import Footer from "../components/Footer";
 // Vercel Analytics & Speed Insights
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 
-/**
- * NOTE:
- * - Aapki global CSS me user-select: none already set hai (body + *).
- * - Is file me hum sirf SEO metadata improve kar rahe hain.
- * - LIVE URL ko yahan update rakhein (vercel domain ya custom domain).
- */
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ||
-  "https://tools.themabtech.com";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://tools.themabtech.com";
 
 const SITE_NAME = "MAB Digital Tools";
 const TITLE = `${SITE_NAME} — Free, Fast & Privacy-Friendly Utilities`;
 const DESCRIPTION =
-  "Convert PDFs, download videos (allowed sources), and more. No sign-up. Lightweight, responsive, and privacy-first tools by MAB Tech.";
+  "MAB Digital Tools provides fast, free, browser-based utilities for video downloads, file conversion, SEO helpers, and more. Lightweight, responsive, and privacy-first tools by MAB Tech.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -37,13 +30,10 @@ export const metadata: Metadata = {
     "Free Tools",
     "SEO Tools",
     "Image Tools",
+    "Document Tools",
+    "MAB Tech",
   ],
-  authors: [{ name: "MAB Tech" }],
-  creator: "MAB Tech",
-  publisher: "MAB Tech",
-  alternates: {
-    canonical: "/",
-  },
+  authors: [{ name: "MAB Tech", url: SITE_URL }],
   openGraph: {
     type: "website",
     url: SITE_URL,
@@ -65,11 +55,27 @@ export const metadata: Metadata = {
   },
 };
 
-export const viewport = {
+export const viewport: Viewport = {
   themeColor: "#0ea5e9",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const webSiteJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: SITE_NAME,
+    url: SITE_URL,
+    potentialAction: {
+      "@type": "SearchAction",
+      target: `${SITE_URL}/tools?q={search_term_string}`,
+      "query-input": "required name=search_term_string",
+    },
+  };
+
   return (
     <html lang="en">
       {/* Performance & SEO friendly defaults */}
@@ -77,6 +83,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SpeedInsights />
         <Header />
         <main className="flex-1 mt-16">{children}</main>
+
+        {/* Global WebSite JSON-LD (SEO only, no UI impact) */}
+        <script
+          type="application/ld+json"
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(webSiteJsonLd),
+          }}
+        />
+
         <Footer />
         <Analytics />
       </body>

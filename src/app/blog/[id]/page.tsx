@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { blogs } from "@/data/blog";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://tools.themabtech.com";
 
 type Params = { id: string };
 
@@ -71,6 +72,38 @@ export default function BlogDetailPage({ params }: { params: Params }) {
           <p className="text-sm text-muted-foreground">Content coming soon. Stay tuned!</p>
         )}
       </article>
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            headline: post.title,
+            description: post.excerpt ?? "Read this post on MAB Digital Tools.",
+            datePublished: post.date ?? undefined,
+            author: {
+              "@type": "Person",
+              name: post.author ?? "MAB Tech",
+            },
+            mainEntityOfPage: {
+              "@type": "WebPage",
+              "@id": `${SITE_URL}/blog/${post.slug}`,
+            },
+            image: post.cover
+              ? [
+                  `${SITE_URL}${
+                    post.cover.startsWith("/") ? post.cover : `/${post.cover}`
+                  }`,
+                ]
+              : undefined,
+            publisher: {
+              "@type": "Organization",
+              name: "MAB Digital Tools",
+            },
+          }),
+        }}
+      />
     </main>
   );
 }

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { tools } from "@/data/tools";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://tools.themabtech.com";
 
 type Params = { id: string };
 
@@ -66,6 +67,30 @@ export default function ToolDetailPage({ params }: { params: Params }) {
           Yeh page abhi template/placeholder hai. TikTok Video Downloader yahin implement hoga.
         </p>
       </section>
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            name: tool.name,
+            description: tool.description || "Explore this tool on MAB Digital Tools.",
+            applicationCategory: tool.category || "Utility",
+            operatingSystem: "Web",
+            url: `${SITE_URL}/tools/${tool.slug}`,
+            offers: {
+              "@type": "Offer",
+              price: "0",
+              priceCurrency: "USD",
+            },
+            creator: {
+              "@type": "Organization",
+              name: "MAB Digital Tools",
+            },
+          }),
+        }}
+      />
     </main>
   );
 }
