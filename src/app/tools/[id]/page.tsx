@@ -32,7 +32,7 @@ export default function ToolDetailPage({ params }: { params: Params }) {
   if (!tool) notFound();
 
   return (
-    <main className="mx-auto w-full max-w-3xl p-6">
+    <main className="mx-auto w-full max-w-6xl p-6">
       <nav className="mb-4">
         <Link href="/tools" className="text-sm text-muted-foreground hover:underline">
           ← Back to all tools

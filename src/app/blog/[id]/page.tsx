@@ -32,7 +32,7 @@ export default function BlogDetailPage({ params }: { params: Params }) {
   if (!post) notFound();
 
   return (
-    <main className="mx-auto w-full max-w-3xl p-6">
+    <main className="mx-auto w-full max-w-5xl p-6">
       <nav className="mb-4">
         <Link href="/blog" className="text-sm text-muted-foreground hover:underline">
           ← Back to blog

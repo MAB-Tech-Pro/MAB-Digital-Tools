@@ -3,11 +3,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { Menu, X, Search } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const [desktopSearch, setDesktopSearch] = useState("");
+  const [mobileSearch, setMobileSearch] = useState("");
   const pathname = usePathname();
+  const router = useRouter();
 
   // Menu model
   const menuItems = useMemo(
@@ -32,7 +35,7 @@ export default function Header() {
   const toggleMenu = () => setIsOpen((v) => !v);
   const closeMenu = () => setIsOpen(false);
 
-  // ✅ NEW: Auto-close drawer on route change (fixes your mobile issue)
+  // ✅ Auto-close drawer on route change
   useEffect(() => {
     setIsOpen(false);
   }, [pathname]);
@@ -57,6 +60,35 @@ export default function Header() {
       };
     }
   }, [isOpen]);
+
+  const handleSearchNavigate = (query: string) => {
+    const trimmed = query.trim();
+    if (!trimmed) return;
+
+    let basePath = "/tools";
+
+    if (pathname?.startsWith("/tools")) {
+      basePath = "/tools";
+    } else if (pathname?.startsWith("/blog")) {
+      basePath = "/blog";
+    }
+
+    router.push(`${basePath}?q=${encodeURIComponent(trimmed)}`);
+  };
+
+  const handleDesktopSearchKeyDown = (e: any) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSearchNavigate(desktopSearch);
+    }
+  };
+
+  const handleMobileSearchKeyDown = (e: any) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSearchNavigate(mobileSearch);
+    }
+  };
 
   return (
     <header className="w-full bg-white shadow-md fixed top-0 left-0 z-50">
@@ -91,7 +123,10 @@ export default function Header() {
                 {item.name}
               </Link>
               {index < menuItems.length - 1 && (
-                <span className="text-gray-400 mx-2 select-none" aria-hidden="true">
+                <span
+                  className="text-gray-400 mx-2 select-none"
+                  aria-hidden="true"
+                >
                   |
                 </span>
               )}
@@ -109,6 +144,9 @@ export default function Header() {
               placeholder="Search..."
               aria-label="Search"
               className="px-3 py-2 pr-10 border border-gray-600 rounded bg-gray-100 text-gray-700 placeholder-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2"
+              value={desktopSearch}
+              onChange={(e) => setDesktopSearch(e.target.value)}
+              onKeyDown={handleDesktopSearchKeyDown}
             />
             <Search
               className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 pointer-events-none"
@@ -126,7 +164,11 @@ export default function Header() {
             aria-controls="mobile-drawer"
             className="inline-flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2"
           >
-            {isOpen ? <X className="w-6 h-6 text-gray-800" /> : <Menu className="w-6 h-6 text-gray-800" />}
+            {isOpen ? (
+              <X className="w-6 h-6 text-gray-800" />
+            ) : (
+              <Menu className="w-6 h-6 text-gray-800" />
+            )}
           </button>
         </div>
       </div>
@@ -168,6 +210,9 @@ export default function Header() {
               placeholder="Search..."
               aria-label="Search"
               className="w-full px-3 py-2 pr-10 border border-gray-300 rounded bg-gray-100 text-gray-700 placeholder-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2"
+              value={mobileSearch}
+              onChange={(e) => setMobileSearch(e.target.value)}
+              onKeyDown={handleMobileSearchKeyDown}
             />
             <Search
               className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 pointer-events-none"

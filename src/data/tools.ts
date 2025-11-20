@@ -18,6 +18,17 @@ export const tools: Tool[] = [
     description: "Download videos you have rights to save.",
     category: "Video Downloader",
     status: "beta",
-    icon: "🎵"
+    icon: "🎵",
+  },
+  {
+    id: 2,
+    slug: "tellabot",
+    name: "Tellabot Integration Tool",
+    description:
+      "Manage Tellabot virtual numbers: request MDNs, read SMS codes, cancel or reactivate numbers using your Tellabot username and API key.",
+    category: "Virtual Numbers & SMS",
+    status: "beta",
+    icon: "📱",
+    route: "/tools/tellabot",
   },
 ];

@@ -134,17 +134,17 @@ export default function Home() {
       <section className="relative py-20 text-center select-none">
         {/* Floating Blobs */}
         <motion.div
-          className="absolute -top-20 -left-20 w-60 h-60 bg-blue-300 rounded-full opacity-30 blur-3xl"
+          className="absolute -top-20 -left-20 w-60 h-60 bg-blue-400 rounded-full opacity-30 blur-3xl"
           animate={{ x: [0, 20, -20, 0], y: [0, -30, 20, 0], scale: [1, 1.1, 0.9, 1] }}
           transition={{ duration: 12, repeat: Infinity, repeatType: "loop" }}
         />
         <motion.div
-          className="absolute top-0 right-10 w-72 h-72 bg-pink-300 rounded-full opacity-30 blur-3xl"
+          className="absolute top-0 right-10 w-72 h-72 bg-pink-400 rounded-full opacity-30 blur-3xl"
           animate={{ x: [0, -25, 15, 0], y: [0, 20, -20, 0], scale: [1, 0.95, 1.05, 1] }}
           transition={{ duration: 14, repeat: Infinity, repeatType: "loop", delay: 2 }}
         />
         <motion.div
-          className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-80 h-80 bg-green-300 rounded-full opacity-20 blur-3xl"
+          className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-80 h-80 bg-green-400 rounded-full opacity-20 blur-3xl"
           animate={{ x: [0, 30, -30, 0], y: [0, -20, 25, 0], scale: [1, 1.05, 0.95, 1] }}
           transition={{ duration: 16, repeat: Infinity, repeatType: "loop", delay: 4 }}
         />
